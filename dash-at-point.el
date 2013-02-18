@@ -3,7 +3,7 @@
 ;; Copyright (C) 2013 Shinji Tanaka
 ;; Author:  Shinji Tanaka <shinji.tanaka@gmail.com>
 ;; Created: 17 Feb 2013
-;; Version: 0.0.2
+;; Version: 0.0.3
 ;; URL: https://github.com/stanaka/dash-at-point
 ;;
 ;; This file is NOT part of GNU Emacs.
@@ -70,13 +70,13 @@
     )
   "Association list of Language strings and major-modes.")
 
-(defun dash-at-point-guess-language ()
-  "Guess which lang is suite"
+(defun dash-at-point-guess-docset ()
+  "Guess which docset suit to the current major mode."
   (cdr (assoc major-mode dash-at-point-mode-alist))
 )
 
 (defun dash-at-point ()
-  "Dash at point"
+  "Call Dash the word at point."
   (interactive)
   (start-process 
    "Dash" nil "open" 
