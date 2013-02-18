@@ -28,6 +28,10 @@
 ;;
 ;;; Commentary:
 ;;
+;; Dash ( http://kapeli.com/ ) is an API Documentation Browser and
+;; Code Snippet Manager. dash-at-point make it easy to search the word
+;; at point with Dash.
+;;
 ;; Add the following to your .emacs:
 ;;
 ;;   (add-to-list 'load-path "/path/to/dash-at-point")
