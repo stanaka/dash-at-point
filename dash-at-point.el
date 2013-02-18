@@ -84,9 +84,9 @@
     "dash://" 
     (read-from-minibuffer
      "Dash search: "
-     (if (dash-at-point-guess-language)
+     (if (dash-at-point-guess-docset)
 	 (concat
-	  (dash-at-point-guess-language) ":"
+	  (dash-at-point-guess-docset) ":"
 	  (thing-at-point 'symbol))
        (thing-at-point 'symbol))
      )))
