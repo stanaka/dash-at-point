@@ -3,7 +3,7 @@
 ;; Copyright (C) 2013 Shinji Tanaka
 ;; Author:  Shinji Tanaka <shinji.tanaka@gmail.com>
 ;; Created: 17 Feb 2013
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; URL: https://github.com/stanaka/dash-at-point
 ;;
 ;; This file is NOT part of GNU Emacs.
@@ -37,8 +37,39 @@
 ;;
 ;; Run `dash-at-point' to search the word at point, then Dash is
 ;; launched and search the word.
+;;
+;; Dash queries can be narrowed down with a docset prefix. You can
+;; customize the relations between docsets and major modes.
+;;
+;;   (add-to-list 'dash-at-point-mode-alist '(perl-mode . "perl"))
 
 ;;; Code:
+
+(defvar dash-at-point-mode-alist
+  '(
+    (c-mode . "c")
+    (c++-mode . "cpp")
+    (css-mode . "css")
+    (emacs-lisp-mode . "elisp")
+    (html-mode . "html")
+    (java-mode . "java")
+    (js2-mode . "javascript")
+    (lua-mode . "lua")
+    (objc-mode . "iphoneos")
+    (perl-mode . "perl")
+    (cperl-mode . "perl")
+    (php-mode . "php")
+    (python-mode . "python3")
+    (ruby-mode . "ruby")
+    (scala-mode . "scala")
+    (vim-mode . "vim")
+    )
+  "Association list of Language strings and major-modes.")
+
+(defun dash-at-point-guess-language ()
+  "Guess which lang is suite"
+  (cdr (assoc major-mode dash-at-point-mode-alist))
+)
 
 (defun dash-at-point ()
   "Dash at point"
@@ -48,10 +79,15 @@
    (concat 
     "dash://" 
     (read-from-minibuffer
-     "Dash search: " 
-     (thing-at-point 'symbol)))))
+     "Dash search: "
+     (if (dash-at-point-guess-language)
+	 (concat
+	  (dash-at-point-guess-language) ":"
+	  (thing-at-point 'symbol))
+       (thing-at-point 'symbol))
+     )))
+)
 
 (provide 'dash-at-point)
 
 ;;; dash-at-point.el ends here
-

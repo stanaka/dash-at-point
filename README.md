@@ -15,6 +15,12 @@ Add the following to your .emacs:
 
 Run `dash-at-point' to search the word at point, then Dash is launched and search the word.
 
+Dash queries can be narrowed down with a docset prefix. You can customize the relations between docsets and major modes.
+
+```
+(add-to-list 'dash-at-point-mode-alist '(perl-mode . "perl"))
+```
+
 # Copyright
 
 Copyright (C) 2013 Shinji Tanaka
