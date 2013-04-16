@@ -1,4 +1,4 @@
-;; dash-at-point.el --- Search the word at point with Dash
+;;; dash-at-point.el --- Search the word at point with Dash
 
 ;; Copyright (C) 2013 Shinji Tanaka
 ;; Author:  Shinji Tanaka <shinji.tanaka@gmail.com>
