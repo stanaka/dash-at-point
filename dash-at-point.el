@@ -75,6 +75,7 @@
   (cdr (assoc major-mode dash-at-point-mode-alist))
 )
 
+;;;###autoload
 (defun dash-at-point ()
   "Call Dash the word at point."
   (interactive)
