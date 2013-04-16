@@ -6,7 +6,10 @@ dash-at-point.el --- Search the word at point with Dash
 
 # Usage
 
-Add the following to your .emacs:
+If you choose not to use one of the convenient packages in
+[Melpa][melpa], you will need to add the directory containing
+`dash-at-point.el` to your `load-path`, and then add the following to
+your .emacs:
 
 ```
 (add-to-list 'load-path "/path/to/dash-at-point")
@@ -22,6 +25,8 @@ Dash queries can be narrowed down with a docset prefix. You can customize the re
 ```
 (add-to-list 'dash-at-point-mode-alist '(perl-mode . "perl"))
 ```
+
+[melpa]: http://melpa.milkbox.net
 
 # Copyright
 

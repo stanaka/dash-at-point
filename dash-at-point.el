@@ -1,4 +1,4 @@
-;; dash-at-point.el --- Search the word at point with Dash
+;;; dash-at-point.el --- Search the word at point with Dash
 
 ;; Copyright (C) 2013 Shinji Tanaka
 ;; Author:  Shinji Tanaka <shinji.tanaka@gmail.com>
@@ -75,19 +75,20 @@
   (cdr (assoc major-mode dash-at-point-mode-alist))
 )
 
+;;;###autoload
 (defun dash-at-point ()
   "Call Dash the word at point."
   (interactive)
-  (start-process 
-   "Dash" nil "open" 
-   (concat 
-    "dash://" 
+  (start-process
+   "Dash" nil "open"
+   (concat
+    "dash://"
     (read-from-minibuffer
      "Dash search: "
      (if (dash-at-point-guess-docset)
-	 (concat
-	  (dash-at-point-guess-docset) ":"
-	  (thing-at-point 'symbol))
+         (concat
+          (dash-at-point-guess-docset) ":"
+          (thing-at-point 'symbol))
        (thing-at-point 'symbol))
      )))
 )
