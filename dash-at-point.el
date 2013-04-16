@@ -78,16 +78,16 @@
 (defun dash-at-point ()
   "Call Dash the word at point."
   (interactive)
-  (start-process 
-   "Dash" nil "open" 
-   (concat 
-    "dash://" 
+  (start-process
+   "Dash" nil "open"
+   (concat
+    "dash://"
     (read-from-minibuffer
      "Dash search: "
      (if (dash-at-point-guess-docset)
-	 (concat
-	  (dash-at-point-guess-docset) ":"
-	  (thing-at-point 'symbol))
+         (concat
+          (dash-at-point-guess-docset) ":"
+          (thing-at-point 'symbol))
        (thing-at-point 'symbol))
      )))
 )
