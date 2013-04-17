@@ -11,7 +11,7 @@ If you choose not to use one of the convenient packages in
 `dash-at-point.el` to your `load-path`, and then add the following to
 your .emacs:
 
-```
+```lisp
 (add-to-list 'load-path "/path/to/dash-at-point")
 (autoload 'dash-at-point "dash-at-point"
           "Search the word at point with Dash." t nil)
@@ -22,7 +22,7 @@ Run `dash-at-point' to search the word at point, then Dash is launched and searc
 
 Dash queries can be narrowed down with a docset prefix. You can customize the relations between docsets and major modes.
 
-```
+```lisp
 (add-to-list 'dash-at-point-mode-alist '(perl-mode . "perl"))
 ```
 
@@ -30,7 +30,7 @@ Additionally, the buffer-local variable `dash-at-point-docset` can
 be set in a specific mode hook (or file/directory local variables)
 to programmatically override the guessed docset.  For example:
 
-```
+```lisp
 (add-hook 'rinari-minor-mode-hook
           (lambda () (setq dash-at-point-docset "rails")))
 ```
