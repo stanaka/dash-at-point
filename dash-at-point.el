@@ -40,7 +40,8 @@
 ;;   (global-set-key "\C-cd" 'dash-at-point)
 ;;
 ;; Run `dash-at-point' to search the word at point, then Dash is
-;; launched and search the word.
+;; launched and search the word. To edit the search term first,
+;; use C-u to set the prefix argument for `dash-at-point'.
 ;;
 ;; Dash queries can be narrowed down with a docset prefix.  You can
 ;; customize the relations between docsets and major modes.
@@ -88,26 +89,31 @@ for one or more docsets in Dash."
 
 (defun dash-at-point-guess-docset ()
   "Guess which docset suit to the current major mode."
-  (cdr (assoc major-mode dash-at-point-mode-alist))
-)
+  (cdr (assoc major-mode dash-at-point-mode-alist)))
+
+(defun dash-at-point-run-search (search-string)
+  "Directly execute search for SEARCH-STRING in Dash."
+  (start-process "Dash" nil "open" (concat "dash://" search-string)))
+
+(defun dash-at-point-add-guessed-docset (search-string)
+  "Prefix SEARCH-STRING with the guessed docset, if any."
+  (let ((docset (dash-at-point-guess-docset)))
+    (concat (when docset
+              (concat docset ":"))
+            search-string)))
 
 ;;;###autoload
-(defun dash-at-point ()
-  "Call Dash the word at point."
-  (interactive)
-  (start-process
-   "Dash" nil "open"
-   (concat
-    "dash://"
-    (read-from-minibuffer
-     "Dash search: "
-     (if (dash-at-point-guess-docset)
-         (concat
-          (dash-at-point-guess-docset) ":"
-          (thing-at-point 'symbol))
-       (thing-at-point 'symbol))
-     )))
-)
+(defun dash-at-point (&optional edit-search)
+  "Search for the word at point in Dash.
+If the optional prefix argument EDIT-SEARCH is specified,
+the user will be prompted to edit the search string first."
+  (interactive "P")
+  (let* ((thing (thing-at-point 'symbol))
+         (search (dash-at-point-add-guessed-docset thing)))
+    (dash-at-point-run-search
+     (if (or edit-search (null thing))
+         (read-string "Dash search: " search)
+       search))))
 
 (provide 'dash-at-point)
 

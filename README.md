@@ -18,7 +18,7 @@ your .emacs:
 (global-set-key "\C-cd" 'dash-at-point)
 ```
 
-Run `dash-at-point' to search the word at point, then Dash is launched and search the word.
+Run `dash-at-point' to search the word at point, then Dash is launched and search the word. Use prefix argument `C-u` to edit the search string first.
 
 Dash queries can be narrowed down with a docset prefix. You can customize the relations between docsets and major modes.
 
