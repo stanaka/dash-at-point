@@ -47,6 +47,13 @@
 ;; customize the relations between docsets and major modes.
 ;;
 ;;   (add-to-list 'dash-at-point-mode-alist '(perl-mode . "perl"))
+;;
+;; Additionally, the buffer-local variable `dash-at-point-docset' can
+;; be set in a specific mode hook (or file/directory local variables)
+;; to programmatically override the guessed docset.  For example:
+;;
+;;   (add-hook 'rinari-minor-mode-hook
+;;             (lambda () (setq dash-at-point-docset "rails")))
 
 ;;; Code:
 
@@ -87,6 +94,20 @@ for one or more docsets in Dash."
                        (string :tag "Docset tag")))
   :group 'dash-at-point)
 
+;;;###autoload
+(defvar dash-at-point-docset nil
+  "Variable used to specify the docset for the current buffer.
+Users can set this to override the default guess made using
+`dash-at-point-mode-alist', allowing the docset to be determined
+programatically.
+
+For example, Ruby on Rails programmers might add an \"allruby\"
+tag to the Rails, Ruby and Rubygems docsets in Dash, and then add
+code to `rinari-minor-mode-hook' or `ruby-on-rails-mode-hook'
+which sets this variable to \"allruby\" so that Dash will search
+the combined docset.")
+(make-variable-buffer-local 'dash-at-point-docset)
+
 (defun dash-at-point-guess-docset ()
   "Guess which docset suit to the current major mode."
   (cdr (assoc major-mode dash-at-point-mode-alist)))
@@ -95,9 +116,9 @@ for one or more docsets in Dash."
   "Directly execute search for SEARCH-STRING in Dash."
   (start-process "Dash" nil "open" (concat "dash://" search-string)))
 
-(defun dash-at-point-add-guessed-docset (search-string)
+(defun dash-at-point-maybe-add-docset (search-string)
   "Prefix SEARCH-STRING with the guessed docset, if any."
-  (let ((docset (dash-at-point-guess-docset)))
+  (let ((docset (or dash-at-point-docset (dash-at-point-guess-docset))))
     (concat (when docset
               (concat docset ":"))
             search-string)))
@@ -109,7 +130,7 @@ If the optional prefix argument EDIT-SEARCH is specified,
 the user will be prompted to edit the search string first."
   (interactive "P")
   (let* ((thing (thing-at-point 'symbol))
-         (search (dash-at-point-add-guessed-docset thing)))
+         (search (dash-at-point-maybe-add-docset thing)))
     (dash-at-point-run-search
      (if (or edit-search (null thing))
          (read-string "Dash search: " search)

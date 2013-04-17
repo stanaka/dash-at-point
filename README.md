@@ -26,6 +26,15 @@ Dash queries can be narrowed down with a docset prefix. You can customize the re
 (add-to-list 'dash-at-point-mode-alist '(perl-mode . "perl"))
 ```
 
+Additionally, the buffer-local variable `dash-at-point-docset` can
+be set in a specific mode hook (or file/directory local variables)
+to programmatically override the guessed docset.  For example:
+
+```
+(add-hook 'rinari-minor-mode-hook
+          (lambda () (setq dash-at-point-docset "rails")))
+```
+
 [melpa]: http://melpa.milkbox.net
 
 # Copyright
