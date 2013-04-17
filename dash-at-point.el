@@ -49,9 +49,15 @@
 
 ;;; Code:
 
-(defvar dash-at-point-mode-alist
-  '(
-    (c++-mode . "cpp")
+;;;###autoload
+(defgroup dash-at-point nil
+  "Searching in Dash for text at point."
+  :prefix "dash-at-point-"
+  :group 'external)
+
+;;;###autoload
+(defcustom dash-at-point-mode-alist
+  '((c++-mode . "cpp")
     (c-mode . "c")
     (coffee-mode . "coffee")
     (common-lisp-mode . "lisp")
@@ -71,9 +77,14 @@
     (python-mode . "python3")
     (ruby-mode . "ruby")
     (scala-mode . "scala")
-    (vim-mode . "vim")
-    )
-  "Association list of Language strings and major-modes.")
+    (vim-mode . "vim"))
+  "Alist which maps major modes to Dash docset tags.
+Each entry is of the form (MAJOR-MODE . DOCSET-TAG) where
+MAJOR-MODE is a symbol and DOCSET-TAG is a corresponding tag
+for one or more docsets in Dash."
+  :type '(repeat (cons (symbol :tag "Major mode name")
+                       (string :tag "Docset tag")))
+  :group 'dash-at-point)
 
 (defun dash-at-point-guess-docset ()
   "Guess which docset suit to the current major mode."
