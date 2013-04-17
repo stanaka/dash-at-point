@@ -29,7 +29,7 @@
 ;;; Commentary:
 ;;
 ;; Dash ( http://kapeli.com/ ) is an API Documentation Browser and
-;; Code Snippet Manager. dash-at-point make it easy to search the word
+;; Code Snippet Manager.  dash-at-point make it easy to search the word
 ;; at point with Dash.
 ;;
 ;; Add the following to your .emacs:
@@ -42,7 +42,7 @@
 ;; Run `dash-at-point' to search the word at point, then Dash is
 ;; launched and search the word.
 ;;
-;; Dash queries can be narrowed down with a docset prefix. You can
+;; Dash queries can be narrowed down with a docset prefix.  You can
 ;; customize the relations between docsets and major modes.
 ;;
 ;;   (add-to-list 'dash-at-point-mode-alist '(perl-mode . "perl"))
