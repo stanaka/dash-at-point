@@ -95,6 +95,14 @@ for one or more docsets in Dash."
   :group 'dash-at-point)
 
 ;;;###autoload
+(defvar dash-at-point-docsets (loop for (key . value) in dash-at-point-mode-alist collect value)
+  "Variable used to store all known Dash docsets. The default value
+is a collection of all the values from `dash-at-point-mode-alist'.
+
+Setting or appending this variable can be used to add completion
+options to `dash-at-point-with-docset'.")
+
+;;;###autoload
 (defvar dash-at-point-docset nil
   "Variable used to specify the docset for the current buffer.
 Users can set this to override the default guess made using
@@ -135,6 +143,24 @@ the user will be prompted to edit the search string first."
      (if (or edit-search (null thing))
          (read-string "Dash search: " search)
        search))))
+
+;;;###autoload
+(defun dash-at-point-with-docset (&optional edit-search)
+  "Search for the word at point in Dash with a chosen docset.
+The docset options are suggested from the variable
+`dash-at-point-docsets'.
+
+If the optional prefix argument EDIT-SEARCH is specified,
+the user will be prompted to edit the search string after
+choosing the docset."
+  (interactive "P")
+  (let* ((thing (thing-at-point 'symbol))
+         (docset (completing-read "Dash docset: " dash-at-point-docsets))
+         (search (if (or edit-search (null thing))
+                     (read-from-minibuffer (concat "Dash search (" docset "): "))
+                   thing)))
+    (dash-at-point-run-search
+     (concat docset ":" search))))
 
 (provide 'dash-at-point)
 
