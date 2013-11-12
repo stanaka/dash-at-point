@@ -65,7 +65,8 @@
 
 ;;;###autoload
 (defcustom dash-at-point-mode-alist
-  '((c++-mode . "cpp")
+  '((actionscript-mode . "actionscript")
+    (c++-mode . "cpp")
     (c-mode . "c")
     (clojure-mode . "clojure")
     (coffee-mode . "coffee")
