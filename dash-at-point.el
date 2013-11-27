@@ -107,10 +107,7 @@ for one or more docsets in Dash."
   :group 'dash-at-point)
 
 ;;;###autoload
-(defvar dash-at-point-docsets (mapcar
-                               (lambda (element)
-                                 (cdr element))
-                               dash-at-point-mode-alist)
+(defvar dash-at-point-docsets (mapcar #'cdr dash-at-point-mode-alist)
   "Variable used to store all known Dash docsets. The default value
 is a collection of all the values from `dash-at-point-mode-alist'.
 
