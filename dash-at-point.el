@@ -219,7 +219,7 @@ the combined docset.")
 		   (concat "dash-plugin://"
 			   (when docset
 			     (concat "keys=" docset "&"))
-			   "query=" search-string))))
+			   "query=" (url-hexify-string search-string)))))
 
 ;;;###autoload
 (defun dash-at-point (&optional edit-search)
