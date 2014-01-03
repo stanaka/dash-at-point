@@ -3,7 +3,7 @@
 ;; Copyright (C) 2013 Shinji Tanaka
 ;; Author:  Shinji Tanaka <shinji.tanaka@gmail.com>
 ;; Created: 17 Feb 2013
-;; Version: 0.0.4
+;; Version: 0.0.5
 ;; URL: https://github.com/stanaka/dash-at-point
 ;;
 ;; This file is NOT part of GNU Emacs.
@@ -64,7 +64,69 @@
   :group 'external)
 
 ;;;###autoload
+(defcustom dash-at-point-legacy-mode nil
+  "Non-nil means use the legacy mode ('dash://') to invoke Dash.
+Nil means use the modern mode ('dash-plugin://').
+(This mode may remove in the future.)"
+  :type 'boolean
+  :group 'dash-at-point)
+
+;;;###autoload
 (defcustom dash-at-point-mode-alist
+  '((actionscript-mode . "actionscript")
+    (arduino-mode . "arduino")
+    (c++-mode . "cpp,net,boost,qt,cvcpp,cocos2dx,c,manpages")
+    (c-mode . "c,glib,gl2,gl3,gl4,manpages")
+    (caml-mode . "ocaml")
+    (clojure-mode . "clojure")
+    (coffee-mode . "coffee")
+    (common-lisp-mode . "lisp")
+    (cperl-mode . "perl")
+    (css-mode . "css,bootstrap,foundation,less,cordova,phonegap")
+    (elixir-mode . "elixir")
+    (emacs-lisp-mode . "elisp")
+    (enh-ruby-mode . "ruby")
+    (erlang-mode . "erlang")
+    (gfm-mode . "markdown")
+    (go-mode . "go")
+    (groovy-mode . "groovy")
+    (haml-mode . "haml")
+    (haskell-mode . "haskell")
+    (html-mode . "html,svg,css,bootstrap,foundation,javascript,jquery,jqueryui,jquerym,angularjs,backbone,marionette,meteor,moo,prototype,ember,lodash,underscore,sencha,extjs,knockout,zepto,cordova,phonegap,yui")
+    (jade-mode . "jade")
+    (java-mode . "java,javafx,grails,groovy,playjava,spring,cvj,processing")
+    (js2-mode . "javascript,backbone,angularjs")
+    (js3-mode . "nodejs")
+    (latex-mode . "latex")
+    (less-css-mode . "less")
+    (lua-mode . "lua,corona")
+    (markdown-mode . "markdown")
+    (nginx-mode . "nginx")
+    (objc-mode . "cpp,iphoneos,macosx,appledoc,cocos2dx,cocos2d,cocos3d,kobold2d,sparrow,c,manpages")
+    (perl-mode . "perl,manpages")
+    (php-mode . "php,wordpress,drupal,zend,laravel,yii,joomla,ee,codeigniter,cakephp,symfony,typo3,twig,smarty,html,mysql,sqlite,mongodb,psql,redis")
+    (processing-mode . "processing")
+    (puppet-mode . "puppet")
+    (python-mode . "python3,django,twisted,sphinx,flask,cvp")
+    (ruby-mode . "ruby,rubygems,rails")
+    (sass-mode . "sass,compass,bourbon,neat,css")
+    (scala-mode . "scala,akka,playscala")
+    (stylus-mode . "stylus")
+    (tcl-mode . "tcl")
+    (tuareg-mode . "ocaml")
+    (twig-mode . "twig")
+    (vim-mode . "vim")
+    (yaml-mode . "chef,ansible"))
+  "Alist which maps major modes to Dash docset tags.
+Each entry is of the form (MAJOR-MODE . DOCSET-TAG) where
+MAJOR-MODE is a symbol and DOCSET-TAG is corresponding tags
+for one or more docsets in Dash."
+  :type '(repeat (cons (symbol :tag "Major mode name")
+                       (string :tag "Docset tags")))
+  :group 'dash-at-point)
+
+;;;###autoload
+(defcustom dash-at-point-mode-alist-legacy
   '((actionscript-mode . "actionscript")
     (arduino-mode . "arduino")
     (c++-mode . "cpp")
@@ -107,7 +169,8 @@
     (tcl-mode . "tcl")
     (tuareg-mode . "ocaml")
     (twig-mode . "twig")
-    (vim-mode . "vim"))
+    (vim-mode . "vim")
+    (yaml-mode . "chef"))
   "Alist which maps major modes to Dash docset tags.
 Each entry is of the form (MAJOR-MODE . DOCSET-TAG) where
 MAJOR-MODE is a symbol and DOCSET-TAG is a corresponding tag
@@ -140,18 +203,23 @@ the combined docset.")
 
 (defun dash-at-point-guess-docset ()
   "Guess which docset suit to the current major mode."
-  (cdr (assoc major-mode dash-at-point-mode-alist)))
+  (cdr (assoc major-mode
+	      (if dash-at-point-legacy-mode
+		  dash-at-point-mode-alist-legacy
+		  dash-at-point-mode-alist))))
 
-(defun dash-at-point-run-search (search-string)
+(defun dash-at-point-run-search (search-string &optional docset)
   "Directly execute search for SEARCH-STRING in Dash."
-  (start-process "Dash" nil "open" (concat "dash://" search-string)))
-
-(defun dash-at-point-maybe-add-docset (search-string)
-  "Prefix SEARCH-STRING with the guessed docset, if any."
-  (let ((docset (or dash-at-point-docset (dash-at-point-guess-docset))))
-    (concat (when docset
-              (concat docset ":"))
-            search-string)))
+  (start-process "Dash" nil "open"
+		 (if dash-at-point-legacy-mode
+		     (concat "dash://"
+			     (when docset
+			       (concat docset ":"))
+			     search-string)
+		   (concat "dash-plugin://"
+			   (when docset
+			     (concat "keys=" docset "&"))
+			   "query=" search-string))))
 
 ;;;###autoload
 (defun dash-at-point (&optional edit-search)
@@ -160,11 +228,12 @@ If the optional prefix argument EDIT-SEARCH is specified,
 the user will be prompted to edit the search string first."
   (interactive "P")
   (let* ((thing (thing-at-point 'symbol))
-         (search (dash-at-point-maybe-add-docset thing)))
+	 (docset (or dash-at-point-docset (dash-at-point-guess-docset))))
     (dash-at-point-run-search
      (if (or edit-search (null thing))
-         (read-string "Dash search: " search)
-       search))))
+         (read-string "Dash search: " thing)
+       thing)
+     docset)))
 
 ;;;###autoload
 (defun dash-at-point-with-docset (&optional edit-search)
@@ -177,12 +246,12 @@ the user will be prompted to edit the search string after
 choosing the docset."
   (interactive "P")
   (let* ((thing (thing-at-point 'symbol))
-         (docset (completing-read "Dash docset: " dash-at-point-docsets))
+         (docset (completing-read "Dash docset: " dash-at-point-docsets
+				  nil nil nil 'minibuffer-history (dash-at-point-guess-docset)))
          (search (if (or edit-search (null thing))
                      (read-from-minibuffer (concat "Dash search (" docset "): "))
                    thing)))
-    (dash-at-point-run-search
-     (concat docset ":" search))))
+    (dash-at-point-run-search search docset)))
 
 (provide 'dash-at-point)
 

@@ -16,6 +16,7 @@ your .emacs:
 (autoload 'dash-at-point "dash-at-point"
           "Search the word at point with Dash." t nil)
 (global-set-key "\C-cd" 'dash-at-point)
+(global-set-key "\C-ce" 'dash-at-point-with-docset)
 ```
 
 Run `dash-at-point` to search the word at point, then Dash is launched and search the word. Use prefix argument `C-u` to edit the search string first.
@@ -26,6 +27,8 @@ Dash queries can be narrowed down with a docset prefix. You can customize the re
 (add-to-list 'dash-at-point-mode-alist '(perl-mode . "perl"))
 ```
 
+To choose docsets before call Dash, run `dash-at-point-with-docset`. The docset options are suggested from the variable
+
 Additionally, the buffer-local variable `dash-at-point-docset` can
 be set in a specific mode hook (or file/directory local variables)
 to programmatically override the guessed docset.  For example:
@@ -33,6 +36,12 @@ to programmatically override the guessed docset.  For example:
 ```lisp
 (add-hook 'rinari-minor-mode-hook
           (lambda () (setq dash-at-point-docset "rails")))
+```
+
+Dash 1.9.3 introduces a new way to call Dash with keywords (`dash-plugin://`), but if you want to use the legacy way (`dash://`), set non-nil to `dash-at-point-legacy-mode`.
+
+```lisp
+(custom-set-variables '(dash-at-point-legacy-mode t))
 ```
 
 [melpa]: http://melpa.milkbox.net
