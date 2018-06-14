@@ -113,6 +113,7 @@ Nil means use the modern mode ('dash-plugin://').
     (rust-mode . "rust")
     (sass-mode . "sass,compass,bourbon,neat,css")
     (scala-mode . "scala,akka,playscala,scaladoc")
+    (sql-mode . "psql,mysql,sqlite,postgis")
     (stylus-mode . "stylus")
     (tcl-mode . "tcl")
     (tuareg-mode . "ocaml")
