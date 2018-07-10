@@ -115,6 +115,7 @@ Nil means use the modern mode ('dash-plugin://').
     (scala-mode . "scala,akka,playscala,scaladoc")
     (sql-mode . "psql,mysql,sqlite,postgis")
     (stylus-mode . "stylus")
+    (swift-mode . "cpp,iphoneos,macosx,appledoc,cocoapods,cocos2dx,cocos2d,cocos3d,kobold2d,sparrow,c,manpages")
     (tcl-mode . "tcl")
     (tuareg-mode . "ocaml")
     (twig-mode . "twig")
