@@ -215,7 +215,7 @@ the combined docset.")
 
 (defun dash-at-point-run-search (search-string &optional docset)
   "Directly execute search for SEARCH-STRING in Dash."
-  (start-process "Dash" nil "open"
+  (start-process "Dash" nil "open" "-g"
 		 (if dash-at-point-legacy-mode
 		     (concat "dash://"
 			     (when docset
