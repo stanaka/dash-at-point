@@ -96,7 +96,7 @@ Nil means use the modern mode ('dash-plugin://').
     (html-mode . "html,svg,css,bootstrap,foundation,awesome,javascript,jquery,jqueryui,jquerym,angularjs,backbone,marionette,meteor,moo,prototype,ember,lodash,underscore,sencha,extjs,knockout,zepto,cordova,phonegap,yui")
     (jade-mode . "jade")
     (java-mode . "java,javafx,grails,groovy,playjava,spring,cvj,processing,javadoc")
-    (js2-mode . "javascript,backbone,angularjs")
+    (js2-mode . "javascript,backbone,angularjs,ember")
     (js3-mode . "nodejs")
     (latex-mode . "latex")
     (less-css-mode . "less")
