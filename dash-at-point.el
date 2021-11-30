@@ -233,12 +233,11 @@ If the optional prefix argument EDIT-SEARCH is specified,
 the user will be prompted to edit the search string first."
   (interactive "P")
   (let* ((thing (thing-at-point 'symbol))
-	 (docset (or dash-at-point-docset (dash-at-point-guess-docset))))
-    (dash-at-point-run-search
-     (if (or edit-search (null thing))
-         (read-string "Dash search: " thing)
-       thing)
-     docset)))
+         (search (if (or edit-search (null thing))
+                     (read-string "Dash search: " thing)
+                   (car (last (split-string thing "/")))))
+         (docset (or dash-at-point-docset (dash-at-point-guess-docset))))
+    (dash-at-point-run-search search docset)))
 
 ;;;###autoload
 (defun dash-at-point-with-docset (&optional edit-search)
@@ -255,7 +254,7 @@ choosing the docset."
 				  nil nil nil 'minibuffer-history (dash-at-point-guess-docset)))
          (search (if (or edit-search (null thing))
                      (read-from-minibuffer (concat "Dash search (" docset "): "))
-                   thing)))
+                   (car (last (split-string thing "/"))))))
     (dash-at-point-run-search search docset)))
 
 (provide 'dash-at-point)
