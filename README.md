@@ -27,7 +27,7 @@ Dash queries can be narrowed down with a docset prefix. You can customize the re
 (add-to-list 'dash-at-point-mode-alist '(perl-mode . "perl"))
 ```
 
-To choose docsets before call Dash, run `dash-at-point-with-docset`. The docset options are suggested from the variable
+To choose docsets before call Dash, run `dash-at-point-with-docset`. If you have Dash 3.0+ installed, the options are suggested from the function `dash-at-point-installed-docsets`. Otherwise, the options are suggested from the variable `dash-at-point-docsets`.
 
 Additionally, the buffer-local variable `dash-at-point-docset` can
 be set in a specific mode hook (or file/directory local variables)

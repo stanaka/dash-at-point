@@ -5,6 +5,7 @@
 ;; Created: 17 Feb 2013
 ;; Version: 0.0.5
 ;; URL: https://github.com/stanaka/dash-at-point
+;; Package-Requires: ((s "1.9.0"))
 ;;
 ;; This file is NOT part of GNU Emacs.
 ;;
@@ -56,6 +57,9 @@
 ;;             (lambda () (setq dash-at-point-docset "rails")))
 
 ;;; Code:
+
+(require 'rx)
+(require 's)
 
 ;;;###autoload
 (defgroup dash-at-point nil
@@ -226,6 +230,12 @@ the combined docset.")
 			     (concat "keys=" docset "&"))
 			   "query=" (url-hexify-string search-string)))))
 
+(defun dash-at-point-installed-docsets ()
+  "Look-up the installed docsets and cheatsheets."
+  (let ((dash-defaults (shell-command-to-string "defaults read com.kapeli.dashdoc docsets"))
+        (keyword-regexp (rx (or "platform" "pluginKeyword") space "=" space (group (1+ word)) ";\n")))
+    (cl-map 'list #'cdr (s-match-strings-all keyword-regexp dash-defaults))))
+
 ;;;###autoload
 (defun dash-at-point (&optional edit-search)
   "Search for the word at point in Dash.
@@ -243,7 +253,10 @@ the user will be prompted to edit the search string first."
 ;;;###autoload
 (defun dash-at-point-with-docset (&optional edit-search)
   "Search for the word at point in Dash with a chosen docset.
-The docset options are suggested from the variable
+
+If you have Dash 3.0+ installed, the options are suggested from
+the function `dash-at-point-installed-docsets'.
+Otherwise, the options are suggested from the variable
 `dash-at-point-docsets'.
 
 If the optional prefix argument EDIT-SEARCH is specified,
@@ -251,8 +264,9 @@ the user will be prompted to edit the search string after
 choosing the docset."
   (interactive "P")
   (let* ((thing (thing-at-point 'symbol))
-         (docset (completing-read "Dash docset: " dash-at-point-docsets
-				  nil nil nil 'minibuffer-history (dash-at-point-guess-docset)))
+         (docsets (or (dash-at-point-installed-docsets) dash-at-point-docsets))
+         (docset (completing-read "Dash docset: " docsets
+                                  nil nil nil 'minibuffer-history (dash-at-point-guess-docset)))
          (search (if (or edit-search (null thing))
                      (read-from-minibuffer (concat "Dash search (" docset "): "))
                    thing)))
